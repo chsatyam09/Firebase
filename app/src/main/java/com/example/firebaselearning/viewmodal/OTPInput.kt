@@ -47,35 +47,29 @@ import androidx.core.text.isDigitsOnly
 @Composable
 fun OTPInput(
     modifier: Modifier = Modifier,
-    otp: Int?, // Integer or Null
+    otp: Int?,
 
-    onNumberChanged: (Int?) -> Unit, // Jab user kuch type karta hai ya delete karta hai, to ye function call hota hai.
+    onNumberChanged: (Int?) -> Unit,
 
-    focusRequester: FocusRequester, // Ye help karta hai programmatically kisi box pe focus lane me.
-    // Example: User ne pehla digit type kiya, ab agle box pe cursor le jana hai:
+    focusRequester: FocusRequester,
 
-    onKeyboardBack: () -> Unit, // Jab user backspace dabata hai aur box already khaali hota hai, to pehle wale box pe focus bhejne ke liye ye call hota hai.
-    // Example: 3rd box khaali hai aur backspace dabaya → cursor 2nd box me chala jaata hai.
 
-    onFocusChanged: (Boolean) -> Unit,// Jab is box me focus aata hai ya chala jaata hai, to ye batata hai.
-
-    isOtpComplete: Boolean // Ye check karta hai ki saare digits fill ho chuke hain ya nahi.
+    onKeyboardBack: () -> Unit,
+    onFocusChanged: (Boolean) -> Unit,
 ) {
     var text by remember {
         mutableStateOf(
             TextFieldValue(
                 text = otp?.toString().orEmpty(),
-                selection = TextRange(index = if (otp != null) 1 else 0) // Cursor ko kaha place karna hai,  wo decide kar rahe hain.
-//                    Agar OTP me koi digit hai (yaani otp != null) → cursor digit ke baad lagana hai → index = 1
-//                    Agar OTP null hai → field blank hai → cursor pehla position (0) pe hona chahiye
+                selection = TextRange(index = if (otp != null) 1 else 0)
             )
         )
     }
 
 
-    var isFocused by remember { mutableStateOf(false) } // isFocused: tracks if the field is currently focused.
+    var isFocused by remember { mutableStateOf(false) }
 
-    val focusManager = LocalFocusManager.current //     focusManager: controls focus programmatically (e.g., hide keyboard).
+    val focusManager = LocalFocusManager.current
 
 
     Box(
@@ -95,10 +89,8 @@ fun OTPInput(
             value = text,
             onValueChange = { newValue ->
                 val newNumber = newValue.text
-                if (newNumber.length <= 1 && newNumber.isDigitsOnly()) { // Ye check karta hai ki user ne 1 character se zyada toh nahi likh diya && Ye check karta hai ki jo user ne likha hai, wo sirf number (0–9) hi ho.
-                    text = newValue // Ye line text state ko update karti hai. Yani field ke andar dikha raha value ab naye user input se update ho gayi.
-                    onNumberChanged(newNumber.toIntOrNull()) // Ye callback parent ko batata hai ki kya digit type hua hai.
-                    // Agar input empty hai (e.g. backspace dabake field khali ho gaya) → newNumber.toIntOrNull() return karega null.
+                if (newNumber.length <= 1 && newNumber.isDigitsOnly()) { 
+                    onNumberChanged(newNumber.toIntOrNull())
                 }
             },
             cursorBrush = SolidColor(Color.Black),
@@ -108,16 +100,15 @@ fun OTPInput(
                 fontSize = 20.sp,
                 color = Color.Black
             ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number  ), // Ensures number keyboard shows.
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number  ),
 
             modifier = Modifier
                 .fillMaxSize()
                 .padding(8.dp)
-                .focusRequester(focusRequester)// Ye allow karta hai ki programmatically is field pe focus laya ja sake.// Jaise: agla digit type karte hi agla box auto-focus ho jaye.
+                .focusRequester(focusRequester)
                 .onFocusChanged {
-                    isFocused = it.isFocused // isFocused local variable update hota hai (shayad styling ke liye)
-                    onFocusChanged(it.isFocused) // external callback call karta hai (UI ko update karne ke liye)
-//                    it.isFocused == true → cursor is field me hai , false → cursor chala gaya
+                    isFocused = it.isFocused
+                    onFocusChanged(it.isFocused)
                 }
                 .onKeyEvent { event ->
                     if (event.nativeKeyEvent.keyCode == KeyEvent.KEYCODE_DEL && text.text.isEmpty()) {

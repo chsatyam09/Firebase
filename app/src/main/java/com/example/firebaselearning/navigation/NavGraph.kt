@@ -16,7 +16,7 @@ import com.example.firebaselearning.screens.auth.WelcomeSplash
 import com.example.yourapp.ui.screens.Signup
 
 @Composable
-fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modifier) {
+fun NavigationGraph(navController: NavHostController,onGoogleSignIn: () -> Unit, modifier: Modifier = Modifier) {
     NavHost(navController = navController, startDestination = NavRoutes.WelcomeSplash.routes, modifier = modifier) {
 
         composable(NavRoutes.WelcomeSplash.routes) {
@@ -24,7 +24,8 @@ fun NavigationGraph(navController: NavHostController, modifier: Modifier = Modif
 
         }
         composable(NavRoutes.Login.routes) {
-            Login(navController)
+//            Login(navController)
+            Login(navController = navController, onGoogleSignIn = onGoogleSignIn)
         }
 
         composable(NavRoutes.ForgetPassword.routes) { backStackEntry ->

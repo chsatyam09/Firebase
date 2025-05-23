@@ -40,7 +40,7 @@ fun Signup(navController: NavController, viewModel: AuthViewModel = viewModel())
     val context = LocalContext.current
     val authState by viewModel.authState.collectAsState()
 
-    // 🔁 Observe ViewModel auth state
+
     LaunchedEffect(authState) {
         when (authState) {
             is AuthState.Success -> {
@@ -303,13 +303,13 @@ fun SignUpButton(
 @Composable
 fun SignUpWithGoogle() {
     OutlinedButton(
-        onClick = { /* Handle Google Sign Up */ },
+        onClick = {  },
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp)
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.img), // Make sure the drawable exists
+            painter = painterResource(id = R.drawable.google_icon),
             contentDescription = null,
             modifier = Modifier.size(20.dp)
         )

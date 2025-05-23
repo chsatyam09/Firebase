@@ -61,13 +61,13 @@ import com.example.firebaselearning.viewmodal.AuthViewModel
 import com.jihan.vecto.Vecto
 import com.jihan.vecto._vectooutlinedicons.Eye
 import com.jihan.vecto._vectooutlinedicons.EyeOff
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 @Composable
 fun Login(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    onGoogleSignIn: () -> Unit,
     authViewModel: AuthViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -139,7 +139,7 @@ fun Login(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                GoogleLoginButton()
+                GoogleLoginButton(onClick = onGoogleSignIn)
                 Spacer(modifier = Modifier.height(16.dp))
                 SignUpText(
                     navController = navController
@@ -282,10 +282,6 @@ fun RememberMeAndForgot(
 }
 
 
-
-
-
-
 //@Composable
 //fun LoginButton(
 //    navController: NavHostController,
@@ -345,16 +341,34 @@ fun LoginButton(
 
 
 
+//@Composable
+//fun GoogleLoginButton() {
+//    OutlinedButton(
+//        onClick = {  },
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .height(48.dp)
+//    ) {
+//        Icon(
+//            painter = painterResource(id = R.drawable.google_icon),
+//            contentDescription = "Google icon",
+//            modifier = Modifier.size(24.dp)
+//        )
+//        Spacer(modifier = Modifier.width(8.dp))
+//        Text("Login with Google")
+//    }
+//}
+
 @Composable
-fun GoogleLoginButton() {
+fun GoogleLoginButton(onClick: () -> Unit) {
     OutlinedButton(
-        onClick = { /* Handle Google login */ },
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            painter = painterResource(id = R.drawable.google_icon),
             contentDescription = "Google icon",
             modifier = Modifier.size(24.dp)
         )
@@ -362,6 +376,7 @@ fun GoogleLoginButton() {
         Text("Login with Google")
     }
 }
+
 
 @Composable
 fun SignUpText(navController: NavHostController) {
@@ -382,10 +397,10 @@ navController.navigate(NavRoutes.Signup.routes)
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    MaterialTheme {
-        Login(  navController = rememberNavController(), modifier = Modifier)
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LoginScreenPreview() {
+//    MaterialTheme {
+//        Login(  navController = rememberNavController(), modifier = Modifier)
+//    }
+//}

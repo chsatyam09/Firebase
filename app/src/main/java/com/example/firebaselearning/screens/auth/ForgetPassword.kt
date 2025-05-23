@@ -1,5 +1,6 @@
 package com.example.firebaselearning.screens.auth
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -25,21 +26,46 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.firebaselearning.navigation.NavRoutes
+import com.example.firebaselearning.viewmodal.AuthState
+import com.example.firebaselearning.viewmodal.AuthViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 @Composable
 fun ForgotPassword(
     navController: NavController,
     email: String,
-    onEmailChange: (String) -> Unit
+    onEmailChange: (String) -> Unit,
+    viewModel: AuthViewModel = viewModel()
 ) {
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+
+    val context = LocalContext.current
+    val authState by viewModel.authState.collectAsState()
+
+
+
+    LaunchedEffect(authState) {
+        when (authState) {
+            is AuthState.Success -> {
+                Toast.makeText(context, "Password reset email sent", Toast.LENGTH_LONG).show()
+                viewModel.resetState()
+                navController.navigate(NavRoutes.Login.routes)
+            }
+            is AuthState.Failure -> {
+                Toast.makeText(context, (authState as AuthState.Failure).message, Toast.LENGTH_LONG).show()
+                viewModel.resetState()
+            }
+            else -> {}
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -57,7 +83,7 @@ fun ForgotPassword(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Subtitle
+
         Text(
             text = "Enter the email address registered with your account. We'll send you a link to reset your password.",
             style = MaterialTheme.typography.bodyMedium,
@@ -104,8 +130,22 @@ fun ForgotPassword(
         Spacer(modifier = Modifier.height(24.dp))
 
         // Submit button
+//        Button(
+//                onClick = { /* TODO: Submit logic */ },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(50.dp),
+//            enabled = email.isNotEmpty(),
+//            shape = RoundedCornerShape(25.dp),
+//            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF0050FF))
+//        ) {
+//            Text(text = "Submit", color = Color.White)
+//        }
+
         Button(
-                onClick = { /* TODO: Submit logic */ },
+            onClick = {
+                viewModel.sendPasswordReset(email)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),

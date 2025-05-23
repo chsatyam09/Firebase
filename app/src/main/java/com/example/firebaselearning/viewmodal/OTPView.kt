@@ -13,7 +13,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 
-//OTPView composable – full OTP input view (e.g., 6 boxes).
 @Composable
 fun OTPView(
     modifier: Modifier = Modifier,
@@ -55,7 +54,7 @@ fun OTPView(
                 onFocusChanged = { isFocused ->
 
                 },
-                isOtpComplete = isOtpComplete
+//                isOtpComplete = isOtpComplete
             )
         }
     }
